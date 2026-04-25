@@ -1,0 +1,19 @@
+{
+  "name": "andy-personal-standards",
+  "version": "0.1.0",
+  "description": "Personal cross-project working standards for Andy: verification rules, language preferences, memory sync protocol.",
+  "author": {
+    "name": "Andy Lin",
+    "email": "s.y.lin.andy@gmail.com"
+  },
+  "homepage": "https://github.com/sylinandy/andy-personal-standards",
+  "repository": "https://github.com/sylinandy/andy-personal-standards",
+  "license": "MIT",
+  "keywords": [
+    "personal",
+    "standards",
+    "verification",
+    "memory-sync",
+    "cowork"
+  ]
+}
