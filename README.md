@@ -24,7 +24,7 @@
 
 ### 一次性: download `.plugin` 檔案
 
-從 [GitHub Releases](https://github.com/sylinandy/andy-personal-standards/releases) 抓最新的 `andy-personal-standards.plugin`, 或從 source build (見下方)。
+從 [GitHub Releases](https://github.com/andylin33/andy-personal-standards/releases) 抓最新的 `andy-personal-standards.plugin`, 或從 source build (見下方)。
 
 ### 在 Cowork (Mac) install
 
@@ -42,7 +42,7 @@
 
 兩台機器步驟一樣:
 
-1. `git clone https://github.com/sylinandy/andy-personal-standards.git ~/code/andy-personal-standards` (或 download zip)
+1. `git clone https://github.com/andylin33/andy-personal-standards.git ~/code/andy-personal-standards` (或 download zip)
 2. `cd ~/code/andy-personal-standards && ./build.sh` (or 手動 zip 見下)
 3. 雙擊產生的 `andy-personal-standards.plugin` 在 Cowork install
 4. Restart Cowork session
@@ -69,7 +69,7 @@
 ## Build from source
 
 ```bash
-git clone https://github.com/sylinandy/andy-personal-standards.git
+git clone https://github.com/andylin33/andy-personal-standards.git
 cd andy-personal-standards
 zip -r /tmp/andy-personal-standards.plugin . -x "*.DS_Store" -x ".git/*" -x "*.plugin"
 ```
