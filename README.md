@@ -100,6 +100,16 @@ andy-personal-standards/
 - 跟 productivity plugin 的 memory-management 整合, 把 sync-out 的 dedupe 用同一套 logic。
 - GitHub Action: push 到 main 自動 build `.plugin` 並 attach 到 release, 兩台機器可以直接抓。
 
+## Changelog
+
+### v0.2.0 (2026-04-27)
+
+Strengthened verification rule: mandatory default for any output going beyond Andy's private chat. No more 'judgement call' on whether to verify; auto-verify if external.
+
+### v0.1.0
+
+Initial release: standards.md auto-load via SessionStart hook, `/sync-out`, `/sync-in`, `/verify-claims` skills.
+
 ## License
 
 MIT

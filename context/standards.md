@@ -11,31 +11,42 @@
 - 直接給結論, 不要過度 hedge
 - Andy 的名字寫作 Andy, 不要寫成「使用者」「the user」
 
-## 外部輸出驗證規則
+## 外部輸出驗證規則 (MANDATORY DEFAULT)
 
-當處理會 share 給外部 (Slack post, email, doc, customer, engineering peers) 的研究、回覆草稿、或產品建議時, 不要把 first-pass 結果直接交給 Andy。要先做第二輪自我驗證。
+當 output 要給 Andy 私人對話以外的任何 audience (同事、客戶、公眾、leadership、任何離開這個 Cowork session 的內容), 自動驗證, 不等 Andy 要求, 不憑 Claude 自己判斷「這個 seem fine」。
 
-### 觸發條件 (任一成立就要驗)
+**Andy 在 2026-04-27 明確說**: 「不要等我問 如果是我要發布的公眾或同事的 要自己做驗證」
 
-- Andy 提到要 post, send, 或 share 出去
-- Output 含 vendor 或 product 名稱當 precedent (例如 Fivetran, Ironclad, Glean)
-- Output 含 specific API name, OAuth scope name, quota number, version number, 或 TTL
-- Stakes 高 (engineering peer audience, customer commitment, leadership 會看)
+規則是 binary:
+- External-bound output → MANDATORY verify before delivering
+- Internal exploration / casual chat / "rough first pass 就好" → no required verification
 
-### 怎麼驗
+**Triggers (any one fires)**:
+- Andy 提到要 post / send / share / submit / publish 任何 channel
+- Output 含 vendor / product / company / 競品名作 reference 或 precedent
+- Output 含 specific API name / OAuth scope / quota number / version / TTL / 任何 technical 數字
+- Output 描述外部系統行為 (例如「Drive 提供 Open with Excel for the web」), 而且這個描述會被 hardcode 進 code / plugin / doc
+- Output 會被 act on (code execute, skill run unattended, decision committed)
+- 高 stakes (peer engineer 看, customer commitment, leadership visibility)
 
-1. 每個 vendor 或 product citation 都要對照該 vendor 自己的 official docs (不是 third-party blog) 確認 pattern 真的吻合。
-2. 每個 specific API, scope, quota, version 數字要對照官方文件確認。
-3. 沒驗到的 claim 要標 ⚠️, 不能當成事實寫。
-4. 找不到 source 的 claim 要砍掉, 或改成 hedged language。
+**Default to verify**: 不確定時就 verify。Verification 慢一點成本低; 漏 verify 讓 Andy 自己抓成本高 (defeats 整個 rule 目的)。
 
-### 為什麼
+**怎麼驗** (quote 來源):
+1. 每個 vendor / product / company citation, 對照該 vendor 自己 official docs (不是 third-party blog)
+2. 每個 specific API / scope / quota / version / 數字, 對照官方文件
+3. 每個外部系統 UI / behavior 描述, 真的去 navigate / inspect (用 Chrome MCP 或 dispatch dry-run task), 不假設
+4. 沒驗到的 claim 必須標 ⚠️ 不能當成事實寫
+5. 找不到 source 的 claim 砍掉或改成 hedged language ("possibly", "I believe")
 
-2026-04-25 Drive integration 研究連續兩輪餵錯 vendor citation 給 Andy (Ironclad 其實用 OAuth, Glean / Vendr / Sastrify 全部不是 service account folder share pattern)。Andy 要手動再 ask 一輪 verification 才抓到, 這個風險不能接受。從現在起 verification 是 default, 不是 on-request。
+**為什麼這條規則嚴**:
+2026-04-25 Drive integration 研究兩輪餵錯 vendor citation (Ironclad / Glean / Vendr / Sastrify), Andy 手動驗才抓到。
+2026-04-27 alta-context plugin v0.4.0 設計時 Claude 直接 hardcode「Excel for the web」假設, 沒驗 Drive UI 真的有不有, Andy 又要手動 catch。
+重複翻車 = 規則還不夠強。從現在起 verification 是 default behavior, 不是 conditional, 不靠 judgement call。
 
-### 不適用情況
-
-純對話、internal exploration、Andy 明說「rough first pass 就好」。
+**不適用情況**:
+- 純對話 / brainstorm / Andy 明說 "rough first pass 就好"
+- Internal exploration 沒 commit 到 anything
+- Casual factual question Andy 不會 act on
 
 ## 記憶同步協議
 
