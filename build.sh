@@ -10,6 +10,7 @@ zip -r "$OUT" . \
   -x "*.DS_Store" \
   -x ".git/*" \
   -x "*.plugin" \
-  -x "build.sh"
+  -x "build.sh" \
+  -x "_deprecated/*"
 echo ""
 echo "Built: $OUT"

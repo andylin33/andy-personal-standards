@@ -7,6 +7,7 @@
 - 語言: 繁體中文 (Traditional Chinese) 為主, 名字 / 技術名詞 / 產品名稱用英文
 - 不用 simplified Chinese (簡體中文)
 - 不用 em dash (—), 用逗號代替
+- 不用 PRC calque (例如「對齊」「賦能」「賦予」「下沉」), 用台灣 register
 - 對話式語氣, 不要 report 式 / 不要過度 bullet point
 - 直接給結論, 不要過度 hedge
 - Andy 的名字寫作 Andy, 不要寫成「使用者」「the user」
@@ -20,14 +21,6 @@
 規則是 binary:
 - External-bound output → MANDATORY verify before delivering
 - Internal exploration / casual chat / "rough first pass 就好" → no required verification
-
-**Triggers (any one fires)**:
-- Andy 提到要 post / send / share / submit / publish 任何 channel
-- Output 含 vendor / product / company / 競品名作 reference 或 precedent
-- Output 含 specific API name / OAuth scope / quota number / version / TTL / 任何 technical 數字
-- Output 描述外部系統行為 (例如「Drive 提供 Open with Excel for the web」), 而且這個描述會被 hardcode 進 code / plugin / doc
-- Output 會被 act on (code execute, skill run unattended, decision committed)
-- 高 stakes (peer engineer 看, customer commitment, leadership visibility)
 
 **Default to verify**: 不確定時就 verify。Verification 慢一點成本低; 漏 verify 讓 Andy 自己抓成本高 (defeats 整個 rule 目的)。
 
@@ -43,52 +36,116 @@
 2026-04-27 alta-context plugin v0.4.0 設計時 Claude 直接 hardcode「Excel for the web」假設, 沒驗 Drive UI 真的有不有, Andy 又要手動 catch。
 重複翻車 = 規則還不夠強。從現在起 verification 是 default behavior, 不是 conditional, 不靠 judgement call。
 
-**不適用情況**:
-- 純對話 / brainstorm / Andy 明說 "rough first pass 就好"
-- Internal exploration 沒 commit 到 anything
-- Casual factual question Andy 不會 act on
+## Auto-invoke verification rules
+
+不靠 Andy 開口, Claude 自己依下面條件決定 invoke 哪個 verification skill。
+
+### Trigger `/verify-claims` 自動 invoke (light fact-check)
+
+ANY of:
+- Output 含 vendor / product / company 名作 precedent / reference (Ironclad / Fivetran / Slack / Notion 等)
+- Output 含 API name / OAuth scope / quota number / version number / TTL / 具體技術數字
+- Output 描述外部系統行為 ("Drive offers X" / "Sheets supports Y") 將被 act on
+
+### Trigger `/verify-work-doc` 自動 invoke (full 5-dimension)
+
+ANY of (在 `/verify-claims` 條件之上額外):
+- Andy 指明 output 要 post / send / share / submit
+- Output 提到 audience 名字 (Daly / Van / Amela / customer 名 / Slack channel)
+- Output 是 structured work deliverable (spec / draft / report / plan / 報告 / 簡報)
+- 含「draft」「proposal」「spec」「post to」keywords
+- Stakes high (peer engineer 看, customer commit, leadership)
+
+### Skip (避免 over-verify)
+
+- 純對話 / 閒聊 / casual factual question
+- Internal exploration / brainstorm
+- Andy 明說 "rough first pass 就好"
+
+## Dispatch verification protocol
+
+派 task / dispatch sub-agent / Agent invocation 時, **MANDATORY** 在 prompt 末尾 paste 下面 verification block 之一。包含 verification block 是 dispatch protocol 的一部分, 不是 optional, 沒例外。
+
+### Template 1: General (fact-check only) , 用於非 work-doc-bound research
+
+```
+## VERIFICATION (required, do not skip)
+
+Before delivering result, run a second pass to verify:
+- Every vendor / product / company citation against official docs (not third-party blogs)
+- Every API / scope / quota / version / TTL number against official documentation
+- Every external system UI / behavior claim by actually navigating it (Chrome MCP / dry-run)
+
+If you cannot verify a claim, mark it with ⚠️ instead of stating as fact.
+If a claim is wrong, fix it before returning, do not surface to user.
+
+Cite source URL for every verified claim.
+```
+
+### Template 2: Work-doc-bound (5 dimension) , 用於 work doc / Slack post / 給 peer / customer / leadership 看的 output
+
+```
+## VERIFICATION (work doc, 5 dimension required)
+
+This output is work-bound (Slack to peers, email, doc shared, customer-facing, leadership review).
+Quality bar is HIGH. Run 5-dimension verification before returning:
+
+1. **Facts**: every vendor / product / API / quota / number cite official source URL. Mark unverifiable with ⚠️.
+2. **Coherence**: argument structure logical, conclusion supported by premises, no leaps.
+3. **Tone**: professional, peer-level (not sycophantic, not stiff), match audience register.
+4. **Format**: Slack mrkdwn correct (no `**bold**`, use `*bold*`), or markdown / docx structure clean.
+5. **Audience fit**: framing right for stated audience (engineering vs leadership vs customer have different language register, depth, jargon level).
+
+For each dimension, give ✅ / ⚠️ / ❌ + specific issue + fix suggestion.
+Do NOT return first-pass output that fails any dimension. Fix before returning.
+```
+
+**強制條款**: Every dispatch prompt MUST include one of these blocks. No exceptions. Including a verification block is part of the dispatch protocol, not optional.
 
 ## 記憶同步協議
 
-跨專案的 working memory (auto-memory) 在不同機器之間透過每個專案資料夾根目錄的 `_memory.md` 檔案同步。
+跨機器、跨專案的 working memory (auto-memory) 透過 Google Drive 上 `_memory.md` 檔案同步。
+
+### 5 個 sync target
+
+- `~/Library/CloudStorage/GoogleDrive-s.y.lin.andy@gmail.com/My Drive/AI Tools and Projects/Alta AI/_memory.md`
+- `~/Library/CloudStorage/GoogleDrive-s.y.lin.andy@gmail.com/My Drive/AI Tools and Projects/Get a job/_memory.md`
+- `~/Library/CloudStorage/GoogleDrive-s.y.lin.andy@gmail.com/My Drive/AI Tools and Projects/Slack Virtual Office/_memory.md`
+- `~/Library/CloudStorage/GoogleDrive-s.y.lin.andy@gmail.com/My Drive/AI Tools and Projects/AI Morning Debrife/_memory.md`
+- `~/Library/CloudStorage/GoogleDrive-s.y.lin.andy@gmail.com/My Drive/AI Tools and Projects/_global_memory.md` (給 scope: global 的 entry)
 
 ### 手動指令
 
-當 Andy 說 "sync out" (或執行 `/sync-out`):
+當 Andy 說 "sync" / "/sync" / "sync 一下":
 
-1. 執行 consolidate-memory pass, 合併重複條目、淘汰過時項目。
-2. 把所有當前 auto-memory (user / feedback / project / reference 四種類型) export 成完整 markdown, 包含清楚的 section 標題與當天日期。
-3. 寫入當前專案資料夾根目錄的 `_memory.md`, 覆蓋舊的。
-4. 回報: export 了幾條、檔案絕對路徑。
+1. 跑 `/sync` skill, 預設 **dry-run** (只 print plan, 不真寫檔案)。
+2. Plan 顯示哪些 entry 要 push (local → drive)、pull (drive → local)、conflict (skip)。
+3. Andy 顯式說 "sync --apply" / "sync 真的寫" / `/sync --apply` 才動檔。
+4. 第一次裝完 plugin 後第一次 invoke 強制 dry-run, 安全 net。
 
-當 Andy 說 "sync in" (或執行 `/sync-in`):
-
-1. 讀當前專案資料夾根目錄的 `_memory.md`。
-2. 對照當前 auto-memory, 每一條記憶檢查是否已經存在 (依名稱 / 描述)。
-3. 只加入缺少的條目, 除非 Andy 明確要求, 不要覆蓋已有的記憶。
-4. 回報: 新增幾條、已存在幾條、有無看起來過時或矛盾的項目。
+完整 sync 流程在 `skills/sync/SKILL.md`。
 
 ### 自動觸發
 
-**自動 sync-out** (不需確認, 完成後告知): 當這個 session 產生「明顯成果」時, 主動 sync out, 不必等 Andy 開口。明顯成果包括:
+**自動 sync** (不需確認, 完成後告知): 當這個 session 產生「明顯成果」時, 主動跑 `/sync --apply`, 不必等 Andy 開口 (除非是 plugin 第一次 install 後的第一次 invoke, 那次仍然 dry-run)。明顯成果包括:
 
 - 做出具體決策 (方向、優先順序、人選、trade-off)
 - 產出交付物 (spec、plan、分析、摘要、memo)
 - 新增重要的專案脈絡 (人物、時程、相依性、範疇變動)
 - 釐清了先前模糊的點
 
-完成後用一行告知:「剛剛同步了 N 條新記憶到 `_memory.md`。」
+完成後用一行告知:「剛剛同步了 N 條記憶 (push X, pull Y, conflict K), apply 完成。」
 
-**自動 sync-in** (不需確認, 回答前告知): 當 Andy 訊息提到的人、決策、事物、或專案脈絡在當前 auto-memory 中找不到對應, 先 sync in 再回答。完成後用一行告知:「你提到 X 我記憶裡沒有, 剛從 `_memory.md` 同步了 N 條, 以下是回答:」
+**自動 pull-only sync** (不需確認, 回答前告知): 當 Andy 訊息提到的人、決策、事物、或專案脈絡在當前 auto-memory 中找不到對應, 先跑 `/sync --apply` 再回答 (這個 case 通常只會 pull 不會 push, 因為當前 session 還沒產出記憶)。完成後用一行告知:「你提到 X 我記憶裡沒有, 剛從 `_memory.md` 同步了 N 條, 以下是回答:」
 
 ### 透明規則
 
-每次自動同步 (in 或 out) 都必須用一行告知 Andy。絕不做靜默同步, Andy 永遠要知道剛發生了什麼。
+每次自動同步都必須用一行告知 Andy。絕不做靜默同步, Andy 永遠要知道剛發生了什麼。
 
-### 唯一真相
+### Conflict resolution
 
-每個專案根目錄的 `_memory.md` 是這個專案在所有機器之間共享的唯一真相檔案。任何時候只存在一份, 每次 sync out 都會覆蓋先前內容。
+兩個 source 對同一條 entry 內容不一致時, drive `_memory.md` 內保留多 version block 加 `status: conflict_pending` marker, 後續 `/sync` 看到這個 marker 就 skip 不動, 等 Andy 手動 resolve (留一個 version + 移除 marker)。詳見 `skills/sync/SKILL.md` 的 conflict resolution section。
 
 ### 不在 git 專案中的情況
 
-如果當前不是 git 專案 (沒有 `.git`), 或沒有清楚的「專案根目錄」概念, 用當前工作目錄當專案根。如果連工作目錄都不明確, 提醒 Andy 切到他要的專案資料夾再 sync。
+`/sync` 不依賴 git, 直接掃 5 個 hardcoded target file path, 加上 entry frontmatter `scope: project:<name>` 路由。所以即使 cwd 不是 git repo 也能 sync。

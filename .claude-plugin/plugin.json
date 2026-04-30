@@ -1,7 +1,7 @@
 {
   "name": "andy-personal-standards",
-  "version": "0.2.0",
-  "description": "Personal cross-project working standards for Andy: verification rules, language preferences, memory sync protocol.",
+  "version": "0.3.0",
+  "description": "Personal cross-project working standards for Andy: unified bidirectional /sync (replaces sync-in/sync-out), work-doc 5-dimension verification, mandatory dispatch verification template, language preferences, auto-invoke verification rules.",
   "author": {
     "name": "Andy Lin",
     "email": "s.y.lin.andy@gmail.com"
@@ -14,6 +14,7 @@
     "standards",
     "verification",
     "memory-sync",
-    "cowork"
+    "cowork",
+    "work-doc-verification"
   ]
 }

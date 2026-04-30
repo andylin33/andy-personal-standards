@@ -2,3 +2,4 @@
 *.plugin
 node_modules/
 .env
+_deprecated/

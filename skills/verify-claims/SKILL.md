@@ -49,15 +49,15 @@ metadata:
    Verification pass on <output 描述>:
 
    ✅ 通過 (N 條)
-   - claim 1 — source URL
-   - claim 2 — source URL
+   - claim 1 , source URL
+   - claim 2 , source URL
 
    ⚠️ 需要 hedge (M 條)
-   - claim 3 — 原本說 X, official docs 說 Y, 建議改成 Z — source URL
+   - claim 3 , 原本說 X, official docs 說 Y, 建議改成 Z , source URL
 
    ❌ 砍掉或重寫 (K 條)
-   - claim 4 — 找不到 source, 建議刪除
-   - claim 5 — 跟 official docs 直接矛盾 — source URL
+   - claim 4 , 找不到 source, 建議刪除
+   - claim 5 , 跟 official docs 直接矛盾 , source URL
 
    建議的 revised output: ...
    ```
