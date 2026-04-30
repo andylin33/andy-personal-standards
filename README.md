@@ -100,6 +100,16 @@ andy-personal-standards/
 
 ## Changelog
 
+### v0.3.1 (2026-04-30)
+
+Refines v0.3.0:
+
+- **Coherence 4-step structure**: `/verify-work-doc` Coherence dimension now mandates a 4-step explicit walk (decompose claims into C1..Cn → map premises → tag Gap / Contradiction / Leap → steel-man counter-argument for top 3 conclusions). Steps cannot be skipped or merged.
+- **Tone anti-patterns separated**: Tone dimension now carries two reference lists. English work-doc list (sycophantic openers, hedge stacking, Anthropic-flagged words, corporate buzzwords, em dash, generic closers, etc., plus declarative + audience-matched register requirements) is the primary, since work docs are in English. Chinese chat list (no simplified Chinese, no PRC calque, no em dash, plus Taiwanese register guide for 取得共識 / 影片 / 軟體 / 滑鼠 / 預設 / 伺服器 / 品質 / 訊息 / 資料) is separate, applied when Andy is being talked to in Chinese.
+- **Trigger requires audience AND deliverable verb (was OR)**: `/verify-work-doc` no longer fires when only one signal is present. Audience indicator (Daly / Van / Amela / customer / Slack channel / "to peers" / "for leadership" / etc.) AND deliverable verb (draft / post / send / share / submit / publish / present / review / propose) must both be present. Single-signal cases fall through to `/verify-claims` light or skip. standards.md adds 5 worked examples showing the AND logic.
+
+4 project CLAUDE.md (Alta AI / Get a job / Slack Virtual Office / AI Morning Debrife) synced to v0.3.1, Project Context sections preserved untouched.
+
 ### v0.3.0 (2026-04-30)
 
 Major refactor. Three big shifts:

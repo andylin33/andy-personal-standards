@@ -49,12 +49,21 @@ ANY of:
 
 ### Trigger `/verify-work-doc` 自動 invoke (full 5-dimension)
 
-ANY of (在 `/verify-claims` 條件之上額外):
-- Andy 指明 output 要 post / send / share / submit
-- Output 提到 audience 名字 (Daly / Van / Amela / customer 名 / Slack channel)
-- Output 是 structured work deliverable (spec / draft / report / plan / 報告 / 簡報)
-- 含「draft」「proposal」「spec」「post to」keywords
-- Stakes high (peer engineer 看, customer commit, leadership)
+`/verify-work-doc` 自動 fire 的條件 = **audience indicator AND deliverable verb**, 兩個都要中, 不是 OR。單條件成立不 fire work-doc, 視情況 fire `/verify-claims` light。
+
+**Audience indicator** (any of):
+- 名字: Daly / Van / Amela / 客戶名 / Slack channel 名 (#standup, #product 等)
+- 群: "to peers" / "for leadership" / "to customer" / "to engineering"
+
+**Deliverable verb** (any of):
+- draft / post / send / share / submit / publish / present / review / propose
+
+**對照範例**:
+- ✅ "draft a Slack message to Daly" → audience (Daly) + verb (draft) → fire `/verify-work-doc`
+- ✅ "prep this proposal for Amela" → audience (Amela) + verb (prep / propose) → fire `/verify-work-doc`
+- ✅ "send the Q2 plan to #product" → audience (#product) + verb (send) → fire `/verify-work-doc`
+- ❌ "Daly 在 standup 講 X" → 只有 audience, 無 deliverable verb → skip work-doc; 若含 vendor / API claim 仍 fire `/verify-claims`
+- ❌ "draft something quick" → 只有 verb, 無 audience → fire `/verify-claims` light, 不 fire work-doc
 
 ### Skip (避免 over-verify)
 
@@ -91,8 +100,14 @@ This output is work-bound (Slack to peers, email, doc shared, customer-facing, l
 Quality bar is HIGH. Run 5-dimension verification before returning:
 
 1. **Facts**: every vendor / product / API / quota / number cite official source URL. Mark unverifiable with ⚠️.
-2. **Coherence**: argument structure logical, conclusion supported by premises, no leaps.
-3. **Tone**: professional, peer-level (not sycophantic, not stiff), match audience register.
+2. **Coherence (4-step, do not skip)**:
+   - Step 1: Decompose every claim into C1, C2, ...
+   - Step 2: Map premises for each Cn (cite sentence / data); mark "(no support)" if missing.
+   - Step 3: Tag issues as Gap / Contradiction / Leap.
+   - Step 4: For top 3 conclusions, generate strongest counter-argument; check whether doc addresses it.
+3. **Tone (per language)**:
+   - English work-doc anti-patterns: no "I'd be happy to" / sycophantic openers, no hedge stacking, no Anthropic-flagged words (honestly / genuinely / straightforward), no corporate buzzwords (leverage as verb, synergize, circle back, deep dive as verb), no em dash (use comma), no generic closer ("Hope this helps").
+   - Chinese chat anti-patterns: no simplified Chinese, no PRC calque (對齊 / 賦能 / 視頻 / 軟件 / 鼠標 / 默認 / 服務器 / 質量 / 信息 / 數據-as-info), no em dash; use Taiwanese register (取得共識, 影片, 軟體, 滑鼠, 預設, 伺服器, 品質, 訊息, 資料).
 4. **Format**: Slack mrkdwn correct (no `**bold**`, use `*bold*`), or markdown / docx structure clean.
 5. **Audience fit**: framing right for stated audience (engineering vs leadership vs customer have different language register, depth, jargon level).
 

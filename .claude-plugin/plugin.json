@@ -1,7 +1,7 @@
 {
   "name": "andy-personal-standards",
-  "version": "0.3.0",
-  "description": "Personal cross-project working standards for Andy: unified bidirectional /sync (replaces sync-in/sync-out), work-doc 5-dimension verification, mandatory dispatch verification template, language preferences, auto-invoke verification rules.",
+  "version": "0.3.1",
+  "description": "Personal cross-project working standards for Andy: unified bidirectional /sync (replaces sync-in/sync-out), work-doc 5-dimension verification (Coherence 4-step structure, English + Chinese tone anti-patterns), dual-condition trigger (audience AND deliverable verb), mandatory dispatch verification template, language preferences, auto-invoke verification rules.",
   "author": {
     "name": "Andy Lin",
     "email": "s.y.lin.andy@gmail.com"
